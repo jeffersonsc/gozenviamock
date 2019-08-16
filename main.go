@@ -81,6 +81,7 @@ func singleHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("[singleHandler] ERROR Failed decode single message ", err.Error())
 		w.WriteHeader(500)
 		json.NewEncoder(w).Encode(map[string]string{"error": "failed decode json"})
+		return
 	}
 
 	msgr := SingleSMSResponse{
@@ -102,6 +103,7 @@ func mutipleHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("[singleHandler] ERROR Failed decode single message ", err.Error())
 		w.WriteHeader(500)
 		json.NewEncoder(w).Encode(map[string]string{"error": "failed decode json"})
+		return
 	}
 
 	msgr := MutipleSMSResponse{}
