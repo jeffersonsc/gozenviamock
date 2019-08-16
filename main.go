@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -112,6 +113,8 @@ func mutipleHandler(w http.ResponseWriter, r *http.Request) {
 			DetailDescription: "Message sent",
 		})
 	}
+
+	<-time.After(time.Second * 3)
 
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(msgr)
