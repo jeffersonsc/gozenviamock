@@ -18,7 +18,7 @@ type SingleSMSRequest struct {
 		Msg            string `json:"msg"`
 		CallbackOption string `json:"callbackOption"`
 		ID             string `json:"id"`
-		AggregateID    string `json:"aggregateId"`
+		AggregateID    int    `json:"aggregateId"`
 		FlashSms       bool   `json:"flashSms"`
 	} `json:"sendSmsRequest"`
 }
@@ -39,7 +39,7 @@ type SendSmsResponse struct {
 // MutipleSMSRequest .
 type MutipleSMSRequest struct {
 	SendSmsMultiRequest struct {
-		AggregateID        string `json:"aggregateId"`
+		AggregateID        int `json:"aggregateId"`
 		SendSmsRequestList []struct {
 			Msg            string `json:"msg"`
 			Schedule       string `json:"schedule"`
