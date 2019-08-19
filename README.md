@@ -1,4 +1,4 @@
-# OFICIAL DOCUMENTATION [https://github.com/jeffersonsc/zenvia-apis-mock](https://github.com/jeffersonsc/zenvia-apis-mock)
+# OFICIAL DOCUMENTATION [https://github.com/zenvia/zenvia-apis-mock](https://github.com/zenvia/zenvia-apis-mock)
 
 <img src="https://s3.amazonaws.com/owler-image/logo/zenvia-mobile_owler_20170111_192135_original.png" height="200" />
 
