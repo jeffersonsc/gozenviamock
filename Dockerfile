@@ -15,4 +15,4 @@ RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/gozenviamock ma
 
 EXPOSE 3000
 
-ENTRYPOINT ["/go/bin/gozenviamock"]
+ENTRYPOINT ["/go/bin/gozenviamock", "server"]
