@@ -12,6 +12,8 @@ import (
 
 	"github.com/jeffersonsc/gozenviamock/pkg/mutiple"
 	"github.com/jeffersonsc/gozenviamock/pkg/single"
+	"github.com/jeffersonsc/gozenviamock/pkg/status"
+	"github.com/jeffersonsc/gozenviamock/pkg/cancel"
 	"github.com/urfave/negroni"
 
 	"github.com/google/subcommands"
@@ -45,7 +47,7 @@ func (s *Server) SetFlags(f *flag.FlagSet) {
 // Execute .
 func (s *Server) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
 	n := negroni.Classic()
-	n.Use(applicationJSON())
+	n.Use(applicationJSON(ctx))
 	n.Use(basicAuth())
 
 	r := mux.NewRouter()
@@ -58,6 +60,8 @@ func (s *Server) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{})
 
 	single.RegisterRouter(r)
 	mutiple.RegisterRouter(r)
+	status.RegisterRouter(r)
+	cancel.RegisterRouter(r)
 
 	cerr := make(chan error, 1)
 
@@ -90,8 +94,9 @@ func (s *Server) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{})
 	return subcommands.ExitSuccess
 }
 
-func applicationJSON() negroni.Handler {
+func applicationJSON(ctx context.Context) negroni.Handler {
 	return negroni.HandlerFunc(func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		r.WithContext(ctx)
 		w.Header().Set("Content-Type", "application/json")
 		next(w, r)
 	})
