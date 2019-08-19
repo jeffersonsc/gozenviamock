@@ -9,7 +9,7 @@ Full documentation about Zenvia API on [http://docs.zenviasms.apiary.io](http://
 ## How run? 
 ```bash
 docker build -t rgarbin/zenvia-api-mock . 
-docker run -p 8080:8080 -e PORT=8080 rgarbin/zenvia-api-mock
+docker run -p 8080:3000 rgarbin/zenvia-api-mock
 ```
 
 
