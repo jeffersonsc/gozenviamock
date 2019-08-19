@@ -12,6 +12,7 @@ import (
 
 	"github.com/jeffersonsc/gozenviamock/pkg/mutiple"
 	"github.com/jeffersonsc/gozenviamock/pkg/single"
+	"github.com/urfave/negroni"
 
 	"github.com/google/subcommands"
 	"github.com/gorilla/handlers"
@@ -43,7 +44,13 @@ func (s *Server) SetFlags(f *flag.FlagSet) {
 
 // Execute .
 func (s *Server) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+	n := negroni.Classic()
+	n.Use(applicationJSON())
+	n.Use(basicAuth())
+
 	r := mux.NewRouter()
+	n.UseHandler(r)
+
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 		w.Write([]byte("IT'S WORK!"))
@@ -69,7 +76,7 @@ func (s *Server) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{})
 		log.Printf("HTTP server listening on %v", s.port)
 		// Enable cors
 		cors := handlers.AllowedOrigins([]string{"*"})
-		if err := http.ListenAndServe(fmt.Sprintf(":%s", s.port), handlers.CORS(cors)(r)); err != nil {
+		if err := http.ListenAndServe(fmt.Sprintf(":%s", s.port), handlers.CORS(cors)(n)); err != nil {
 			cerr <- err
 		}
 	}(ctx)
@@ -81,4 +88,28 @@ func (s *Server) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{})
 		return subcommands.ExitFailure
 	}
 	return subcommands.ExitSuccess
+}
+
+func applicationJSON() negroni.Handler {
+	return negroni.HandlerFunc(func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		w.Header().Set("Content-Type", "application/json")
+		next(w, r)
+	})
+}
+
+func basicAuth() negroni.Handler {
+	return negroni.HandlerFunc(func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		if r.URL.Path == "/" {
+			next(w, r)
+			return
+		}
+
+		user, pass, ok := r.BasicAuth()
+		if !ok || user != "user" || pass != "pass" {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprintln(w, `{"error":"unauthorized"}`)
+			return
+		}
+		next(w, r)
+	})
 }
