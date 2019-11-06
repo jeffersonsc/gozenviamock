@@ -11,7 +11,7 @@ COPY . .
 ENV TZ=America/Sao_Paulo
 ENV GO111MODULE=on
 
-RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/gozenviamock main.go
+RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/gozenviamock github.com/jeffersonsc/gozenviamock/cmd/gozenviamock
 
 EXPOSE 3000
 
